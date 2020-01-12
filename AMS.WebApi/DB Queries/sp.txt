@@ -1,0 +1,111 @@
+﻿USE [AMS]
+GO
+
+/****** Object:  StoredProcedure [dbo].[usp_Employee_Update]    Script Date: 1/12/2020 9:46:23 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		dilusha adhikari
+-- Create date: 2020/01/11
+-- Description:	Update employee details
+-- =============================================
+CREATE PROCEDURE [dbo].[usp_Employee_Update]
+	@EmployeeID int,
+	@FirstName nvarchar(50),
+	@LastName nvarchar(50),
+	@Email nvarchar(100),
+	@Active bit,
+	@ManagerID int,
+	@SupervisorID int,
+	@CellLeadID int,
+	@GradeID int,
+	@DepartmentID int,
+	@EmployeeRoles nvarchar(100)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @empId int;
+	SELECT @empId = ID FROM tbl_Employees WHERE EmployeeID = @EmployeeID
+
+	IF(@empId IS NOT NULL)
+	BEGIN
+		UPDATE tbl_Employees
+		SET FirstName = @FirstName, LastName = @LastName, Email = @Email, Active = @Active,
+			ManagerID = @ManagerID, SupervisorID = @SupervisorID, CellLeadID = @CellLeadID,
+			GradeID = @GradeID, DepartmentID = @DepartmentID, UpdateDate = GETDATE()
+		WHERE ID = @empId
+	END
+	ELSE
+	BEGIN
+		INSERT INTO tbl_Employees
+		VALUES(@EmployeeID, @FirstName, @LastName, @Email, @Active, @ManagerID, @SupervisorID, @CellLeadID, @GradeID, @DepartmentID, GETDATE())
+	END
+
+	EXEC usp_EmployeeRoles_Update @EmployeeID, @EmployeeRoles
+END
+GO
+
+
+USE [AMS]
+GO
+
+/****** Object:  StoredProcedure [dbo].[usp_EmployeeRoles_Update]    Script Date: 1/12/2020 9:46:30 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		dilusha adhikari
+-- Create date: 2020/01/11
+-- Description:	Update employee roles
+-- =============================================
+CREATE PROCEDURE [dbo].[usp_EmployeeRoles_Update]
+	@EmployeeID int,
+	@EmployeeRoles nvarchar(100)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DELETE FROM tbl_EmployeeRoleTypes WHERE EmployeeID = @EmployeeID
+
+	INSERT INTO tbl_EmployeeRoleTypes
+	SELECT @EmployeeID, value FROM STRING_SPLIT(@EmployeeRoles,',')
+END
+GO
+
+
+USE [AMS]
+GO
+
+/****** Object:  StoredProcedure [dbo].[usp_EmployeeRolesByEmail_Get]    Script Date: 1/12/2020 9:47:01 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		dilusha adhikari
+-- Create date: 2020/01/12
+-- Description:	Update employee roles
+-- =============================================
+CREATE PROCEDURE [dbo].[usp_EmployeeRolesByEmail_Get]
+	@Email nvarchar(100)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @EmployeeID int
+	SELECT @EmployeeID = EmployeeID FROM tbl_Employees WHERE Email = @Email
+
+	SELECT er.RoleTypeID, r.RoleType FROM tbl_EmployeeRoleTypes er
+	INNER JOIN tbl_RoleTypes r ON er.RoleTypeID = r.ID
+	WHERE EmployeeID = @EmployeeID
+END
+GO
+
+

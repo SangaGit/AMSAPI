@@ -1,0 +1,74 @@
+﻿USE [AMS]
+GO
+
+/****** Object:  Table [dbo].[tbl_EmployeeRoleTypes]    Script Date: 1/12/2020 9:23:40 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tbl_EmployeeRoleTypes](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[EmployeeID] [int] NOT NULL,
+	[RoleTypeID] [int] NOT NULL,
+ CONSTRAINT [PK_tbl_EmployeeRoleTypes] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+USE [AMS]
+GO
+
+/****** Object:  Table [dbo].[tbl_Employees]    Script Date: 1/12/2020 9:42:38 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tbl_Employees](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[EmployeeID] [int] NOT NULL,
+	[FirstName] [nvarchar](50) NOT NULL,
+	[LastName] [nvarchar](50) NOT NULL,
+	[Email] [nvarchar](100) NOT NULL,
+	[Active] [bit] NOT NULL,
+	[ManagerID] [int] NULL,
+	[SupervisorID] [int] NULL,
+	[CellLeadID] [int] NULL,
+	[GradeID] [int] NULL,
+	[DepartmentID] [int] NULL,
+	[UpdateDate] [datetime] NULL,
+ CONSTRAINT [PK_tbl_Employees] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+USE [AMS]
+GO
+
+/****** Object:  Table [dbo].[tbl_RoleTypes]    Script Date: 1/12/2020 9:42:47 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tbl_RoleTypes](
+	[ID] [int] NOT NULL,
+	[RoleType] [nvarchar](20) NOT NULL,
+ CONSTRAINT [PK_tbl_RoleTypes] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
